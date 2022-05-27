@@ -1,19 +1,50 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import {useDropzone} from 'react-dropzone'
 import httpClient from '../axiosConfig'
 
-function DocumentForm() {
-  const [form, setForm] = useState({
-    name: ''
-  })
+function DocumentForm({ addDocument, updateDocument, document }) {
+  
+  const [valid, setValid] = useState(false)
+  const [form, setForm] = useState({ name: '' });
+  const [images, setImages] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [uploadStatus, setUploadStatus] = useState(false);
+
+  useEffect(() => {
+    setValid(!!form.name && images.length > 0)
+  }, [form.name, images]);
+
+  const onDrop = useCallback(acceptedFiles => {
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader()
+      reader.onabort = () => console.log('file reading was aborted')
+      reader.onerror = () => console.log('file reading has failed')
+      reader.onload = () => {
+        const dataUrl = reader.result
+        setPreviews(oldPreviews => [...oldPreviews, dataUrl])
+      }
+      reader.readAsDataURL(file);
+    })
+    setImages(oldImages => [...oldImages, ...acceptedFiles])
+  }, [])
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
 
   const onChange = (e) => {
     setForm({...form, [e.target.id]: e.target.value})
   }
 
   const create = async () => {
-    const response = await httpClient.post('/documents', form)
-    setForm({ name: '' })
+    setUploadStatus(true);
+    let data = new FormData();
+    data.append('name', form.name);
+    images.forEach(i => data.append('images[]', i));
+    const response = await httpClient.post('/documents', data);
+    addDocument(response.data);
+    setForm({ name: '' });
+    setImages([]);
+    setPreviews([]);
+    setUploadStatus(false);
   }
 
   // useEffect(() => {
@@ -22,25 +53,36 @@ function DocumentForm() {
   // }, [assets, expenses])
   
   return (
-    <form action="#" method="POST">
+    <form action="#" method="POST" className={ uploadStatus ? "cursor-not-allowed" : "" }>
       <div className='flex flex-row border rounded p-2 '>
-        <div className='flex'>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-          <input 
+        <div>
+          <input
+            placeholder="Name"
             type="text" 
             name="name" 
             id="name"
+            disabled={uploadStatus}
             value={form.name}
             onChange={onChange}
-            className="mt-1 p-1 pl-2 ml-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border" />
+            className="input w-full input-sm max-w-xs border-gray-300 rounded-md border" />
+          <button onClick={create} disabled={uploadStatus || !valid} class="btn btn-md btn-success mt-4">Add document</button>
         </div>
 
-        <button 
-          type="button" 
-          className="mr-4 ml-2 mb-2 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50"
-          onClick={create}>
-            Add
-        </button>
+        { !uploadStatus && 
+          <div {...getRootProps()} class="border-dashed border-2 rounded-md p-4 cursor-pointer">
+            <input {...getInputProps()} />
+            {
+              isDragActive ?
+                <p>Drop the files here ...</p> :
+                <p>Drag 'n' drop some files here, <br/> or click to select files</p>
+            }
+          </div>
+        }
+        { uploadStatus && <div>Drag 'n' drop some files here, or click to select files</div> }
+
+        {previews.length > 0 && (previews.map((p, index) => 
+          <img className="h-32 w-32" key={index} src={p} />
+        ))}
       </div>
     </form>
   )
