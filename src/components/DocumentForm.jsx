@@ -65,11 +65,11 @@ function DocumentForm({ addDocument, updateDocument, document }) {
             value={form.name}
             onChange={onChange}
             className="input w-full input-sm max-w-xs border-gray-300 rounded-md border" />
-          <button onClick={create} disabled={uploadStatus || !valid} class="btn btn-md btn-success mt-4">Add document</button>
+          <button onClick={create} disabled={uploadStatus || !valid} className="btn btn-md btn-success mt-4">Add document</button>
         </div>
 
         { !uploadStatus && 
-          <div {...getRootProps()} class="border-dashed border-2 rounded-md p-4 cursor-pointer">
+          <div {...getRootProps()} className="border-dashed border-2 rounded-md p-4 cursor-pointer">
             <input {...getInputProps()} />
             {
               isDragActive ?

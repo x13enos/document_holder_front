@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BiFolderOpen } from 'react-icons/bi';
+import { CgFolder, CgBox } from 'react-icons/cg';
 
 function SidebarLink ({ title, icon, link }) {
   return (
@@ -23,7 +23,8 @@ function Sidebar() {
           <h1>Document Holder</h1>
         </div>
         <ul className="flex flex-col py-4">
-          <SidebarLink link="/" title="Documents" icon={<BiFolderOpen />} />
+          <SidebarLink link="/" title="Documents" icon={<CgFolder />} />
+          <SidebarLink link="/boxes" title="Boxes" icon={<CgBox />} />
         </ul>
       </div>
     </div>

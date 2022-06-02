@@ -17,7 +17,7 @@ function Dashboard() {
 
   return (
     <>
-      <DocumentForm addDocument={(document) => setDocuments([...documents, document]) } />
+      <DocumentForm addDocument={(document) => setDocuments([document, ...documents]) } />
       <div className='flex flex-row mt-4'>
         <div className='flex-1'>
           <h1 className='text-2xl'>
@@ -34,4 +34,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default Dashboard;

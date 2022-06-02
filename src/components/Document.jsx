@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BiEditAlt } from "react-icons/bi";
 
 function Document({ document }) {
   const [update, setUpdate] = useState(false);
+  useEffect(function() {
+    
+  })
 
   const firstImages = (document) =>
     document.images.filter((i, index) => index <= 3);
