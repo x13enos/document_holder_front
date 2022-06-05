@@ -4,9 +4,6 @@ import Boxes from './pages/Boxes';
 import SignUp from './pages/auth/SignUp';
 import SignIn from './pages/auth/SignIn';
 import MainLayout from './layouts/Main';
-// import Accounts from './pages/Accounts';
-// import Expenses from './pages/Expenses';
-// import BankAccounts from './pages/BankAccounts';
 import './App.css';
 
 function App() {

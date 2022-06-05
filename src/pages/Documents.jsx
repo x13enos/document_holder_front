@@ -18,17 +18,12 @@ function Dashboard() {
   return (
     <>
       <DocumentForm addDocument={(document) => setDocuments([document, ...documents]) } />
-      <div className='flex flex-row mt-4'>
-        <div className='flex-1'>
-          <h1 className='text-2xl'>
-            Last Documents
-            { documents.length > 0 && <span>({documents.length})</span> }
-          </h1>
-          { documents.map((document) => <Document document={document} />)}
-        </div>
-
-        <div className='flex-1'>
-        </div>
+      <h1 className='text-2xl mt-4'>
+        Last Documents
+        { documents.length > 0 && <span>({documents.length})</span> }
+      </h1>
+      <div className='grid grid-cols-4 gap-4'>
+        { documents.map((document) => <Document document={document} key={document.id} />)}
       </div>
     </>
   )

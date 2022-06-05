@@ -11,7 +11,6 @@ function Boxes() {
       const response = await httpClient.get('/boxes');
       setBoxes(response.data);
     }
-
     fetchData();
   }, []);
 
