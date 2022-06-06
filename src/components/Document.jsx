@@ -1,7 +1,7 @@
-import { BiEditAlt } from "react-icons/bi";
+import { BiEditAlt, BiX } from "react-icons/bi";
 import ImageModal from './ImageModal';
 
-function Document({ document }) {
+function Document({ document, setDeletingId }) {
   const firstImages = (document) =>
     document.images.filter((i, index) => index <= 0);
   
@@ -22,6 +22,11 @@ function Document({ document }) {
               size="1.5em"
               className='invisible group-hover:visible cursor-pointer' 
               onClick={() => {}}/>
+            <label htmlFor="delete-modal" onClick={() => setDeletingId(document.id)}>
+              <BiX
+                size="1.5em" 
+                className='hidden group-hover:block cursor-pointer'/>
+            </label>
           </div>
         </div>
       </div>

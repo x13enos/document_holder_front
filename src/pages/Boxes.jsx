@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import httpClient from '../axiosConfig';
 import Box from '../components/Box';
 import BoxForm from  '../components/BoxForm';
+import DeleteModal from '../components/DeleteModal';
 
 function Boxes() {
   const [boxes, setBoxes] = useState([])
+  const [deletingId, setDeletingId] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,9 +23,10 @@ function Boxes() {
     setBoxes(newArray);
   }
 
-  const deleteBox = (box) => {
+  const deleteBox = async (box) => {
+    await httpClient.delete(`/boxes/${deletingId}`);
     const newArray = [...boxes];
-    const boxIndex = newArray.findIndex((b) => b.id === box.id);
+    const boxIndex = newArray.findIndex((b) => b.id === deletingId);
     newArray.splice(boxIndex, 1);
     setBoxes(newArray);
   }
@@ -39,13 +42,15 @@ function Boxes() {
             Your Boxes
             { boxes.length > 0 && <span>({boxes.length})</span> }
           </h1>
-          { boxes.map((box) => <Box key={box.id} box={box} updateBox={updateBox} deleteCallback={deleteBox} />
+          { boxes.map((box) => 
+            <Box key={box.id} box={box} updateBox={updateBox} setDeletingId={setDeletingId} />
           )}
         </div>
-
-        <div className='flex-1'>
-        </div>
+        <div className='flex-1'></div>
       </div>
+      <DeleteModal 
+        mainText="Are you sure about deleting this box?" 
+        deleteCallback={ () => deleteBox() }/>
     </>
   )
 }
