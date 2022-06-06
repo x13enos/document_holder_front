@@ -2,10 +2,10 @@ import { useState, useCallback, useEffect } from 'react'
 import {useDropzone} from 'react-dropzone'
 import httpClient from '../axiosConfig'
 
-function DocumentForm({ addDocument, updateDocument, document }) {
+function DocumentForm({ addDocument, updateDocument, document, boxes }) {
   
   const [valid, setValid] = useState(false)
-  const [form, setForm] = useState({ name: '' });
+  const [form, setForm] = useState({ name: '', boxId: '' });
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [uploadStatus, setUploadStatus] = useState(false);
@@ -38,24 +38,20 @@ function DocumentForm({ addDocument, updateDocument, document }) {
     setUploadStatus(true);
     let data = new FormData();
     data.append('name', form.name);
+    data.append('box_id', form.boxId);
     images.forEach(i => data.append('images[]', i));
     const response = await httpClient.post('/documents', data);
     addDocument(response.data);
-    setForm({ name: '' });
+    setForm({ name: '', boxId: '' });
     setImages([]);
     setPreviews([]);
     setUploadStatus(false);
   }
-
-  // useEffect(() => {
-  //   const { asset, expense } = categories() 
-  //   setForm({ ...form, credit: asset, debit: expense })
-  // }, [assets, expenses])
   
   return (
-    <form action="#" method="POST" className={ uploadStatus ? "cursor-not-allowed" : "" }>
-      <div className='flex flex-row border rounded p-2 '>
-        <div>
+    <form className={ uploadStatus ? "cursor-not-allowed" : "" }>
+      <div className='flex flex-row border rounded p-2'>
+        <div className='w-64 min-w-max'>
           <input
             placeholder="Name"
             type="text" 
@@ -65,11 +61,25 @@ function DocumentForm({ addDocument, updateDocument, document }) {
             value={form.name}
             onChange={onChange}
             className="input w-full input-sm max-w-xs border-gray-300 rounded-md border" />
-          <button onClick={create} disabled={uploadStatus || !valid} className="btn btn-md btn-success mt-4">Add document</button>
+
+          <div className='flex'>
+            <select 
+              id="boxId"
+              value={form.boxId}
+              onChange={onChange}
+              className="select select-sm select-bordered max-w-xs mt-4">
+              <option disabled value="">Select Box</option>
+              { boxes.map(b => 
+                <option key={b.id} value={b.id}>{b.name}</option>
+              ) }
+
+            </select>
+            <button onClick={create} disabled={uploadStatus || !valid} className="btn btn-sm btn-success ml-2 mt-4">Add</button>
+          </div>
         </div>
 
         { !uploadStatus && 
-          <div {...getRootProps()} className="border-dashed border-2 rounded-md p-4 cursor-pointer">
+          <div {...getRootProps()} className="border-dashed border-2 rounded-md p-4 ml-4 cursor-pointer">
             <input {...getInputProps()} />
             {
               isDragActive ?

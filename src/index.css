@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.card .box-badge {
+  top: -0.65rem;
+  position: absolute;
+  border: 0px;
+  left: 50%;
+  transform: translate(-50%, -0%);
+}
