@@ -1,15 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Documents from './pages/Documents';
 import Boxes from './pages/Boxes';
 import SignUp from './pages/auth/SignUp';
 import SignIn from './pages/auth/SignIn';
 import MainLayout from './layouts/Main';
+import AxiosInterceptorsSetup from './AxiosInterceptorsSetup';
+import instance from './axiosConfig';
 import './App.css';
 
 function App() {
+  function AxiosInterceptorNavigate() {
+    let navigate = useNavigate();
+    AxiosInterceptorsSetup(navigate, instance);
+    return <></>;
+  }
+
   return (
     <>
       <Router>
+        {<AxiosInterceptorNavigate />}
         <Routes>
           <Route path="/" element={<MainLayout />} >
             <Route path="/" element={<Documents />} />
