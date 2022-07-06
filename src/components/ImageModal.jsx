@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import DetectClickingOutside from "../hooks/DetectClickingOutside";
 
 export default function ImageModal({ image }) {
   const [showModal, setShowModal] = useState(false);
+
+  const wrapperRef = useRef(null);
+  DetectClickingOutside(wrapperRef, () => { setShowModal(false) });
 
   return (
     <>
@@ -16,7 +20,7 @@ export default function ImageModal({ image }) {
           <div
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
           >
-            <div className="relative w-auto my-6 mx-auto max-w-2xl">
+            <div ref={wrapperRef} className="relative w-auto my-6 mx-auto max-w-2xl">
               <label
                 onClick={() => setShowModal(false)}
                 className="btn btn-sm btn-circle absolute right-2 top-2 z-10">

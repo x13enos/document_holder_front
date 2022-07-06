@@ -5,9 +5,10 @@ import DocumentForm from  '../components/DocumentForm';
 import DeleteModal from '../components/DeleteModal';
 
 function Dashboard() {
-  const [documents, setDocuments] = useState([])
-  const [boxes, setBoxes] = useState([])
-  const [deletingId, setDeletingId] = useState(null)
+  const [documents, setDocuments] = useState([]);
+  const [updatingDocument, setUpdatingDocument] = useState(null);
+  const [boxes, setBoxes] = useState([]);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -31,16 +32,32 @@ function Dashboard() {
     setDocuments(newArray);
   };
 
+  const updateDocument = (documentData) => {
+    const newArray = [...documents];
+    const documentIndex = newArray.findIndex((d) => d.id === updatingDocument.id);
+    newArray[documentIndex] = documentData;
+    setDocuments(newArray);
+  }
+
   return (
     <>
-      <DocumentForm boxes={boxes} addDocument={(document) => setDocuments([document, ...documents]) } />
+      <DocumentForm
+        setUpdatingDocument={setUpdatingDocument}
+        document={updatingDocument} 
+        boxes={boxes} 
+        updateDocument={(documentData) => updateDocument(documentData)}
+        addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
       <h1 className='text-2xl mt-4'>
         Last Documents
         { documents.length > 0 && <span>({documents.length})</span> }
       </h1>
       <div className='grid grid-cols-4 gap-4 mt-4'>
         { documents.map((document) => 
-        <Document document={document} key={document.id} setDeletingId={setDeletingId}  />
+        <Document 
+          document={document} 
+          key={document.id} 
+          setDeletingId={setDeletingId} 
+          setDocumentAsUpdating={ () => setUpdatingDocument(document) }/>
       )}
       </div>
       <DeleteModal 

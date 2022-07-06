@@ -1,10 +1,7 @@
 import { BiEditAlt, BiX } from "react-icons/bi";
 import ImageModal from './ImageModal';
 
-function Document({ document, setDeletingId }) {
-  const firstImages = (document) =>
-    document.images.filter((i, index) => index <= 0);
-  
+function Document({ document, setDeletingId, setDocumentAsUpdating }) {
   const previousSlideId = (index) => 
     `#slide-${document.id}-${index === 0 ? document.images.length - 1 : index - 1}`
 
@@ -21,7 +18,7 @@ function Document({ document, setDeletingId }) {
             <BiEditAlt
               size="1.5em"
               className='invisible group-hover:visible cursor-pointer' 
-              onClick={() => {}}/>
+              onClick={setDocumentAsUpdating}/>
             <label htmlFor="delete-modal" onClick={() => setDeletingId(document.id)}>
               <BiX
                 size="1.5em" 
@@ -41,10 +38,11 @@ function Document({ document, setDeletingId }) {
             { document.images.length > 0 && document.images.map((image, index) => 
               <div id={`slide-${document.id}-${index}`} key={index} className="carousel-item relative w-full ">
                 <ImageModal image={image} />
-                <div className="invisible group-hover:visible absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                  <a href={previousSlideId(index)} className="btn btn-circle">❮</a> 
-                  <a href={nextSlideId(index)} className="btn btn-circle">❯</a>
-                </div>
+                { document.images.length > 1 && 
+                  <div className="invisible group-hover:visible absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                    <a href={previousSlideId(index)} className="btn btn-circle">❮</a> 
+                    <a href={nextSlideId(index)} className="btn btn-circle">❯</a>
+                  </div> }
               </div>
             ) }
           </div>
