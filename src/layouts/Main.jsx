@@ -8,7 +8,7 @@ const MainLayout =() =>{
     <>
       <div className="flex flex-row">
         <div><Sidebar /></div>
-        <div className='mx-8 mt-4 w-full'><Outlet /></div>
+        <div className='mt-4 w-full'><Outlet /></div>
       </div>
     </>
   )

@@ -32,7 +32,7 @@ function Boxes() {
   }
 
   return (
-    <>
+    <div className='mx-8'>
       <div className='border rounded p-2'>
         <BoxForm addBox={(box) => setBoxes([box, ...boxes]) } />
       </div>
@@ -51,7 +51,7 @@ function Boxes() {
       <DeleteModal 
         mainText="Are you sure about deleting this box?" 
         deleteCallback={ () => deleteBox() }/>
-    </>
+    </div>
   )
 }
 

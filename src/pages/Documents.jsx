@@ -3,6 +3,7 @@ import httpClient from '../axiosConfig';
 import Document from '../components/Document';
 import DocumentForm from  '../components/DocumentForm';
 import DeleteModal from '../components/DeleteModal';
+import DocumentFilters from '../components/DocumentFilters';
 
 function Dashboard() {
   const [documents, setDocuments] = useState([]);
@@ -10,12 +11,13 @@ function Dashboard() {
   const [boxes, setBoxes] = useState([]);
   const [deletingId, setDeletingId] = useState(null);
 
+  const fetchDocuments = async (params = {}) => {
+    const response = await httpClient.get('/documents', { params });
+    setDocuments(response.data);
+  }
+
   useEffect(() => {
-    const fetchDocuments = async () => {
-      const response = await httpClient.get('/documents');
-      setDocuments(response.data);
-    }
-    const fetchBoxes = async () => {
+    const fetchBoxes = async (filters) => {
       const response = await httpClient.get('/boxes');
       setBoxes(response.data);
     }
@@ -41,24 +43,30 @@ function Dashboard() {
 
   return (
     <>
-      <DocumentForm
-        setUpdatingDocument={setUpdatingDocument}
-        document={updatingDocument} 
-        boxes={boxes} 
-        updateDocument={(documentData) => updateDocument(documentData)}
-        addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
-      <h1 className='text-2xl mt-4'>
-        Last Documents
-        { documents.length > 0 && <span>({documents.length})</span> }
-      </h1>
-      <div className='grid grid-cols-4 gap-4 mt-4'>
-        { documents.map((document) => 
-        <Document 
-          document={document} 
-          key={document.id} 
-          setDeletingId={setDeletingId} 
-          setDocumentAsUpdating={ () => setUpdatingDocument(document) }/>
-      )}
+      <DocumentFilters boxes={boxes} fetchDocuments={fetchDocuments} />
+      <div className="divider"></div>
+      <div className='mx-8'>
+        <div className='flex items-center'>
+          <h1 className='text-2xl mr-4'>
+            Documents
+            { documents.length > 0 && <span>({documents.length})</span> }
+          </h1>
+          <DocumentForm
+            setUpdatingDocument={setUpdatingDocument}
+            document={updatingDocument} 
+            boxes={boxes} 
+            updateDocument={(documentData) => updateDocument(documentData)}
+            addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
+        </div>
+        <div className='grid grid-cols-4 gap-4 mt-4'>
+          { documents.map((document) => 
+          <Document 
+            document={document} 
+            key={document.id} 
+            setDeletingId={setDeletingId} 
+            setDocumentAsUpdating={ () => setUpdatingDocument(document) }/>
+        )}
+        </div>
       </div>
       <DeleteModal 
         mainText="Are you sure about deleting this document?" 
