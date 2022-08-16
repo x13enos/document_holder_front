@@ -42,7 +42,7 @@ function Dashboard() {
   }
 
   return (
-    <>
+    <div className='mt-4'>
       <DocumentFilters boxes={boxes} fetchDocuments={fetchDocuments} />
       <div className="divider"></div>
       <div className='mx-8'>
@@ -71,7 +71,7 @@ function Dashboard() {
       <DeleteModal 
         mainText="Are you sure about deleting this document?" 
         deleteCallback={ () => deleteDocument() }/>
-    </>
+    </div>
   )
 }
 

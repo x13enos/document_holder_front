@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CgFolder, CgBox } from 'react-icons/cg';
+import { CgFolder, CgBox, CgUser } from 'react-icons/cg';
 
 function SidebarLink ({ title, icon, link }) {
   return (
@@ -20,22 +20,23 @@ function Sidebar({ currentUser }) {
     <div className="grid grid-rows-6 w-56 bg-white overflow-hidden border-r min-h-screen">
       <div className='flex row row-span-5 flex-col'>
         <div className="flex items-center justify-center h-20 shadow-md">
-          <h1>Document Holder</h1>
+          <span className='font-bold text-lg'>Document Holder</span>
         </div>
         <ul className="flex flex-col p-4 items-start">
           <SidebarLink link="/" title="Documents" icon={<CgFolder />} />
           <SidebarLink link="/boxes" title="Boxes" icon={<CgBox />} />
+          <SidebarLink link="/profile" title="Profile" icon={<CgUser />} />
         </ul>
       </div>
       <div className="row row-span-1 flex p-4 items-end">
-        <div className='flex'>
+        <Link className='flex' to="/profile">
           <div className='avatar placeholder'>
-            <div class="bg-neutral-focus text-neutral-content rounded-full w-8">
+            <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
               {currentUser.email.slice(0, 2)}
             </div>
           </div>
           <div className='ml-1 mt-1'>{currentUser.email}</div>
-        </div>
+        </Link>
       </div>
     </div>
   )

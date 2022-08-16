@@ -32,7 +32,7 @@ function Boxes() {
   }
 
   return (
-    <div className='mx-8'>
+    <div className='mx-8 mt-4'>
       <div className='border rounded p-2'>
         <BoxForm addBox={(box) => setBoxes([box, ...boxes]) } />
       </div>

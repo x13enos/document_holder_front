@@ -21,12 +21,11 @@ const MainLayout = () => {
     <>
       { loading ? 
         <div className="spinner-container flex justify-center items-center h-screen">
-          <div className="loading-spinner">
-          </div>
+          <div className="loading-spinner" />
         </div> :
         <div className="flex flex-row">
           <div><Sidebar currentUser={currentUser} /></div>
-          <div className='mt-4 w-full'><Outlet /></div>
+          <div className='w-full'><Outlet context={currentUser} /></div>
         </div>
       }
 
