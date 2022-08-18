@@ -4,6 +4,26 @@ import httpClient from '../axiosConfig';
 import { AiOutlineFileAdd } from "react-icons/ai";
 import ImageDropdown from './ImageDropdown';
 
+function Modal({ children, showModal, setShowModal, uploadStatus }) {
+  return (
+    <>
+      {!uploadStatus &&
+        <button 
+          className="btn btn-success btn-circle btn-outline"
+          onClick={ () => setShowModal(true) }>
+          <AiOutlineFileAdd size="1.7em" />
+        </button>
+      }
+      {showModal ? (
+        <>
+          {children}
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
+    </>
+  )
+}
+
 function DocumentForm({ addDocument, updateDocument, setUpdatingDocument, document, boxes }) {
   
   const [valid, setValid] = useState(true)
@@ -60,31 +80,30 @@ function DocumentForm({ addDocument, updateDocument, setUpdatingDocument, docume
 
   const cleanUpData = () => {
     setForm({ name: '', boxId: '' });
-    childRef.current.cleanUpPreviews();
+    if (childRef.current)
+      childRef.current.cleanUpPreviews();
     setShowModal(false);
     setUploadStatus(false);
     setUpdatingDocument(null);
   }
 
   return (
-    <>
-      <button 
-        className="btn btn-success btn-circle btn-outline"
-        onClick={ () => setShowModal(true) }>
-        <AiOutlineFileAdd size="1.7em" />
-      </button>
-      {showModal ? (
-        <>
-          <div
-            className="justify-center items-center md:flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
-            <div ref={wrapperRef} className="relative w-3/4 my-6 mx-auto">
-              <label
-                onClick={cleanUpData}
-                className="btn btn-sm btn-circle absolute modal-close-icon z-10">
-                  ✕
-              </label>
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+    <Modal showModal={showModal} setShowModal={setShowModal} uploadStatus={uploadStatus}>
+      <div className="justify-center items-center md:flex overflow-x-hidden overflow-y-auto 
+                      fixed inset-0 z-50 outline-none focus:outline-none">
+        <div ref={wrapperRef} className="relative w-3/4 my-6 mx-auto">
+          <label
+            onClick={cleanUpData}
+            className="btn btn-sm btn-circle absolute modal-close-icon z-10">
+              ✕
+          </label>
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+            { uploadStatus ? (
+              <div className="spinner-container flex justify-center items-center h-40">
+                <div className="loading-spinner" />
+              </div> 
+            ) : (
+              <>
                 <div className="bg-slate-200 min-w-max h-12 pt-2 pl-4">
                   <div className='text-2xl'>{ document ? "Update Document" : "Create New Document" }</div>
                 </div>
@@ -124,17 +143,17 @@ function DocumentForm({ addDocument, updateDocument, setUpdatingDocument, docume
                   </div>
                 </form>
                 <div className="bg-slate-200 min-w-max h-12 pt-2 pr-4">
-                    <button onClick={ document ? update : create } disabled={uploadStatus || !valid} className="btn btn-sm btn-success float-right">
-                      { document ? "Save" : "Add" }
-                    </button>
-                  </div>
-              </div>
-            </div>
+                  <button onClick={ document ? update : create } disabled={uploadStatus || !valid} className="btn btn-sm btn-success float-right">
+                    { document ? "Save" : "Add" }
+                  </button>
+                </div>
+              </>
+            )}
           </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
-    </>
+        </div>
+      </div>
+      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+    </Modal>
   )
 }
 

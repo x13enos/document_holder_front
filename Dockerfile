@@ -6,7 +6,7 @@ WORKDIR /app
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
-ENV REACT_APP_API_BASE_URL="http://document-holder-api.andres-sild.com/api/v1"
+ENV REACT_APP_API_BASE_URL="https://document-holder-api.andres-sild.com/api/v1"
 
 # install app dependencies
 COPY package.json ./
