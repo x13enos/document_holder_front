@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CgFolder, CgBox, CgUser } from 'react-icons/cg';
+import { CgFolder, CgBox } from 'react-icons/cg';
 
 function SidebarLink ({ title, icon, link }) {
   return (
@@ -25,7 +25,6 @@ function Sidebar({ currentUser }) {
         <ul className="flex flex-col p-4 items-start">
           <SidebarLink link="/" title="Documents" icon={<CgFolder />} />
           <SidebarLink link="/boxes" title="Boxes" icon={<CgBox />} />
-          <SidebarLink link="/profile" title="Profile" icon={<CgUser />} />
         </ul>
       </div>
       <div className="row row-span-1 flex p-4 items-end">
