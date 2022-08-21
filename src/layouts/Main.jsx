@@ -6,6 +6,7 @@ import { CgMenu } from 'react-icons/cg';
 
 const MainLayout = () => {
   const [currentUser, setCurrentUser] = useState({});
+  const [modalData, setModalData] = useState({ show: false, content: "" });
   const [loading, setLoading] = useState(true);
 
   const fetchUserData = async (params = {}) => {
@@ -25,6 +26,10 @@ const MainLayout = () => {
           <div className="loading-spinner" />
         </div> :
         <div className="drawer drawer-mobile">
+          { modalData.show && <>
+              {modalData.content}
+              <div className="opacity-25 fixed inset-0 z-40 bg-black" />
+            </> }
           <input id="my-drawer" type="checkbox" className="drawer-toggle" />
           <div className='drawer-side'>
             <label for="my-drawer" className="drawer-overlay z-10" />
@@ -37,7 +42,7 @@ const MainLayout = () => {
                 <CgMenu className="w-6 h-6" />
               </label>
             </div>
-            <Outlet context={currentUser} />
+            <Outlet context={{ currentUser, setModalData }} />
           </div>
         </div>
       }

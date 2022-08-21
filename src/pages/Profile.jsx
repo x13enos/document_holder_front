@@ -5,7 +5,7 @@ import { BiEditAlt, BiCheck } from "react-icons/bi";
 
 function Profile() {
   const navigate = useNavigate();
-  const currentUser = useOutletContext();
+  const { currentUser } = useOutletContext();
   const [pending, setPending] = useState(null);
   const [form, setForm] = useState({ 
     email: currentUser.email,

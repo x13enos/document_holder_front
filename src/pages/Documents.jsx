@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import httpClient from '../axiosConfig';
 import Document from '../components/Document';
 import DocumentForm from  '../components/DocumentForm';
-import DeleteModal from '../components/DeleteModal';
 import DocumentFilters from '../components/DocumentFilters';
+import { AiOutlineFileAdd } from 'react-icons/ai';
+import { useOutletContext } from 'react-router-dom';
 
 function Dashboard() {
   const [documents, setDocuments] = useState([]);
-  const [updatingDocument, setUpdatingDocument] = useState(null);
   const [boxes, setBoxes] = useState([]);
-  const [deletingId, setDeletingId] = useState(null);
+  const { setModalData } = useOutletContext();
 
   const fetchDocuments = async (params = {}) => {
     const response = await httpClient.get('/documents', { params });
@@ -26,19 +26,34 @@ function Dashboard() {
     fetchBoxes();
   }, []);
 
-  const deleteDocument = async () => {
-    await httpClient.delete(`/documents/${deletingId}`);
+  const deleteDocument = async (documentId) => {
+    await httpClient.delete(`/documents/${documentId}`);
     const newArray = [...documents];
-    const documentIndex = newArray.findIndex((d) => d.id === deletingId);
+    const documentIndex = newArray.findIndex((d) => d.id === documentId);
     newArray.splice(documentIndex, 1);
     setDocuments(newArray);
   };
 
-  const updateDocument = (documentData) => {
+  const updateDocument = (document, documentData) => {
     const newArray = [...documents];
-    const documentIndex = newArray.findIndex((d) => d.id === updatingDocument.id);
+    const documentIndex = newArray.findIndex((d) => d.id === document.id);
     newArray[documentIndex] = documentData;
     setDocuments(newArray);
+  }
+
+  const closeModal = () => {
+    setModalData({ show: false, content: <></> });
+  }
+
+  const openForm = (document = null) => {
+    setModalData({ show: true, content:
+      <DocumentForm
+        closeModal={closeModal}
+        boxes={boxes}
+        document={document}
+        updateDocument={(documentData) => updateDocument(documentData)}
+        addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
+    })
   }
 
   return (
@@ -51,26 +66,22 @@ function Dashboard() {
             Documents
             { documents.length > 0 && <span>({documents.length})</span> }
           </h1>
-          <DocumentForm
-            setUpdatingDocument={setUpdatingDocument}
-            document={updatingDocument} 
-            boxes={boxes} 
-            updateDocument={(documentData) => updateDocument(documentData)}
-            addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
+          <button 
+            className="btn btn-success btn-circle btn-outline"
+            onClick={() => openForm(null)}>
+            <AiOutlineFileAdd size="1.7em" />
+          </button>
         </div>
         <div className='grid grid-cols-4 gap-4 mt-4'>
           { documents.map((document) => 
           <Document 
             document={document} 
             key={document.id} 
-            setDeletingId={setDeletingId} 
-            setDocumentAsUpdating={ () => setUpdatingDocument(document) }/>
+            deleteCallback={() => deleteDocument(document.id)}
+            openForm={() => openForm(document)}/>
         )}
         </div>
       </div>
-      <DeleteModal 
-        mainText="Are you sure about deleting this document?" 
-        deleteCallback={ () => deleteDocument() }/>
     </div>
   )
 }
