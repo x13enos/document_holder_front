@@ -57,21 +57,17 @@ function Dashboard() {
   }
 
   return (
-    <div className='mt-4'>
-      <DocumentFilters boxes={boxes} fetchDocuments={fetchDocuments} />
-      <div className="divider"></div>
+    <div>
+      <div className='flex items-center pl-8 h-20 lg:shadow-md'>
+        <span className='text-2xl mr-4'>Documents</span>
+        <button 
+          className="btn btn-success btn-circle btn-outline"
+          onClick={() => openForm(null)}>
+          <AiOutlineFileAdd size="1.7em" />
+        </button>
+      </div>
       <div className='mx-8'>
-        <div className='flex items-center'>
-          <h1 className='text-2xl mr-4'>
-            Documents
-            { documents.length > 0 && <span>({documents.length})</span> }
-          </h1>
-          <button 
-            className="btn btn-success btn-circle btn-outline"
-            onClick={() => openForm(null)}>
-            <AiOutlineFileAdd size="1.7em" />
-          </button>
-        </div>
+        <DocumentFilters boxes={boxes} fetchDocuments={fetchDocuments} />
         <div className='grid grid-cols-4 gap-4 mt-4'>
           { documents.map((document) => 
           <Document 

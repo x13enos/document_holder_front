@@ -1,10 +1,22 @@
 import { useState } from "react";
 import { BiEditAlt, BiX } from "react-icons/bi";
 import BoxForm from  './BoxForm';
-import httpClient from '../axiosConfig'
+import { useOutletContext } from "react-router-dom";
+import DeleteModal from "./DeleteModal";
 
-function Box({ box, updateBox, setDeletingId }) {
+function Box({ box, updateBox, deleteCallback }) {
   const [update, setUpdate] = useState(false);
+  const { setModalData } = useOutletContext();
+
+  const showDeleteModal = () => {
+    setModalData({ 
+      show: true, 
+      content: <DeleteModal
+        mainText={ `Are you sure you want to delete ${box.name}?` }
+        cancelCallback={ () => setModalData({ show: false, content: <></> }) }
+        deleteCallback={deleteCallback} />
+    })
+  };
 
   return (
     <div className="flex group relative mt-4">
@@ -20,7 +32,7 @@ function Box({ box, updateBox, setDeletingId }) {
                 size="1.5em" 
                 className='hidden group-hover:block cursor-pointer mr-1' 
                 onClick={ () => setUpdate(true) }/>
-              <label htmlFor="delete-modal" onClick={() => setDeletingId(box.id)}>
+              <label htmlFor="delete-modal" onClick={showDeleteModal}>
                 <BiX 
                   size="1.5em" 
                   className='hidden group-hover:block cursor-pointer'/>

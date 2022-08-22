@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 
 export default function Datepicker({ date, setDate }) {
   return (
-    <div className="relative w-40 ml-4">
+    <div className="relative col-span-6">
       <ReactDatePicker
         selected={date || ""}
         onChange={(date) => setDate(date)}
