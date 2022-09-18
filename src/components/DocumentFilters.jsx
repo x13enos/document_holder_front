@@ -23,7 +23,7 @@ function DocumentFilters({ boxes, fetchDocuments }) {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4 lg:grid-cols-none lg:grid-flow-col lg:auto-cols-max mt-2 lg:mt-4">
+    <div className="grid grid-cols-12 gap-4 lg:grid-cols-none lg:grid-flow-col lg:auto-cols-max lg:mt-4">
       <input
         id="name"
         value={form.name}

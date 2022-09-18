@@ -68,7 +68,7 @@ function Dashboard() {
       </div>
       <div className='mx-8'>
         <DocumentFilters boxes={boxes} fetchDocuments={fetchDocuments} />
-        <div className='grid grid-cols-4 gap-4 mt-4'>
+        <div className='grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4'>
           { documents.map((document) => 
           <Document 
             document={document} 

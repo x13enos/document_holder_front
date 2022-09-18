@@ -31,12 +31,13 @@ function Profile() {
 
   return (
     <>
-      <div className='flex flex-col'>
-        <div className="flex items-center h-20 shadow-md">
+      <div className='hidden lg:flex flex-col'>
+        <div className="flex items-center h-20 lg:shadow-md">
           <span className='pl-4 font-semibold text-lg'>Your personal data</span>
         </div>
       </div>
-      <div className="form-control w-full max-w-xs mt-4 ml-4">
+      <div className="form-control w-full max-w-xs lg:mt-4 lg:ml-4 mx-auto">
+        <span className='font-semibold text-lg lg:hidden mt-8 mb-2'>Your personal data</span>
         <label className="label">
           <span className="label-text">Email</span>
         </label>
