@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import DetectClickingOutside from "../hooks/DetectClickingOutside";
 import httpClient from '../axiosConfig';
 import ImageDropdown from './ImageDropdown';
+import Multiselect from './inputs/Multiselect';
 
-function DocumentForm({ addDocument, updateDocument, closeModal, document, boxes}) {
+function DocumentForm({ addDocument, updateDocument, closeModal, document, boxes, tags}) {
   
+  const tagsSelectData = tags.reduce((o, tag) => ({ ...o, [tag.id]: tag.name}), {});
   const [valid, setValid] = useState(true)
   const [form, setForm] = useState({ name: '', boxId: '' });
   const [uploadStatus, setUploadStatus] = useState(false);
@@ -15,7 +17,11 @@ function DocumentForm({ addDocument, updateDocument, closeModal, document, boxes
 
   useEffect(() => {
     if (document) {
-      setForm({ name: document.name, boxId: document.box.id });
+      setForm({ 
+        name: document.name, 
+        boxId: document.box.id,
+        tagIds: document.tags.map(t => t.id)
+      });
     }
   }, [document]);
   useEffect(() => { validateData() }, [form])
@@ -50,6 +56,7 @@ function DocumentForm({ addDocument, updateDocument, closeModal, document, boxes
     let data = new FormData();
     data.append('name', form.name);
     data.append('box_id', form.boxId);
+    form.tagIds.forEach(id => data.append('tag_ids[]', id));
     data.append('deleted_images[]', images.filter(i => i.destroy).map(i => i.id));
     images.filter(i => i.id === null).forEach(i => data.append('images[]', i.file));
     return data;
@@ -85,7 +92,7 @@ function DocumentForm({ addDocument, updateDocument, closeModal, document, boxes
               <form className={ uploadStatus ? "px-2 cursor-not-allowed" : "px-2 py-2" }>
                 <div className="p-2">
                   <div className='flex'>
-                    <label htmlFor="name" className='mt-1 mr-2'>Name: </label>
+                    <label htmlFor="name" className='mt-1 w-16'>Name: </label>
                     <input
                       placeholder="Name"
                       type="text" 
@@ -97,18 +104,25 @@ function DocumentForm({ addDocument, updateDocument, closeModal, document, boxes
                       className="input w-full input-sm max-w-xs border-gray-300 rounded-md border" />
                   </div>
                   <div className='flex mt-4'>
-                    <label htmlFor="boxId" className='mt-1 mr-2'>Box: </label>
+                    <label htmlFor="boxId" className='mt-1 w-16'>Box: </label>
                     <select 
                       id="boxId"
                       value={form.boxId}
                       onChange={onChange}
-                      className="select select-sm select-bordered max-w-xs ml-4">
+                      className="select select-sm select-bordered max-w-xs">
                       <option disabled value="">Select Box</option>
                       { boxes.map(b => 
                         <option key={b.id} value={b.id}>{b.name}</option>
                       ) }
 
                     </select>
+                  </div>
+                  <div className='flex mt-4'>
+                    <label htmlFor="tagIds" className='mt-1 w-16'>Tags: </label>
+                    <Multiselect
+                      onChange={(value) => setForm({...form, tagIds: value })}
+                      selectedOptions={form.tagIds} 
+                      items={tagsSelectData} />
                   </div>
                   <ImageDropdown 
                     ref={childRef}

@@ -66,11 +66,12 @@ const ImageDropdown = forwardRef(({ uploadStatus, document, validateData }, ref)
           </div>
           <div className='grid md:grid-cols-4 grid-cols-1 gap-8 mt-2 p-4'>
             {previews.map((p, index) =>
-              <div className="cursor-default mx-full relative border-4 rounded-md">
+              <div
+                key={index} 
+                className="cursor-default mx-full relative border-4 rounded-md" >
                 <img 
                   className="max-h-64 md:max-h-64 mx-auto"
-                  onClick={(event) => { event.stopPropagation() }} 
-                  key={index} 
+                  onClick={(event) => { event.stopPropagation() }}
                   src={p.url} />
                 <label
                   onClick={ event => removeImage(event, index, p) }
