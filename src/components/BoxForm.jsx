@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import httpClient from '../axiosConfig'
 
 function BoxForm({ addBox, updateBox, box = {}, cancel }) {
@@ -17,7 +17,7 @@ function BoxForm({ addBox, updateBox, box = {}, cancel }) {
   }, [form.name]);
 
   useEffect(() => { 
-    setDropdownStyle({...dropdownStyle, backgroundColor: `#${form.color}` });
+    setDropdownStyle({ ...dropdownStyle, backgroundColor: `#${form.color}` });
   }, [form.color])
 
   const onChange = (e) => {

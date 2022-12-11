@@ -23,6 +23,15 @@ function Document({ document, deleteCallback, openForm }) {
     <div className="card card-compact bg-base-100 group shadow-lg hover:shadow-2xl duration-200 delay-75 border">
       <div className="card-body mb-2">
         <h2 className="card-title">{ document.name }</h2>
+        { document.tags.length > 0 && (
+          <div className="flex">
+            {document.tags.map((tag) => (
+              <div key={tag.id} className="mr-2 items-center badge badge-lg">
+                {tag.name}
+              </div>
+            ))}
+          </div>
+        ) }
         <div className="flex justify-between">
           <p>Added: {document.added}</p> 
           <div className="flex">

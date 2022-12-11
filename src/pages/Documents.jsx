@@ -9,21 +9,26 @@ import { useOutletContext } from 'react-router-dom';
 function Dashboard() {
   const [documents, setDocuments] = useState([]);
   const [boxes, setBoxes] = useState([]);
+  const [tags, setTags] = useState([]);
   const { setModalData } = useOutletContext();
 
   const fetchDocuments = async (params = {}) => {
     const response = await httpClient.get('/documents', { params });
     setDocuments(response.data);
   }
+  const fetchBoxes = async (filters) => {
+    const response = await httpClient.get('/boxes');
+    setBoxes(response.data);
+  }
+  const fetchTags = async (filters) => {
+    const response = await httpClient.get('/tags');
+    setTags(response.data);
+  }
 
   useEffect(() => {
-    const fetchBoxes = async (filters) => {
-      const response = await httpClient.get('/boxes');
-      setBoxes(response.data);
-    }
-
     fetchDocuments();
     fetchBoxes();
+    fetchTags();
   }, []);
 
   const deleteDocument = async (documentId) => {
@@ -34,9 +39,9 @@ function Dashboard() {
     setDocuments(newArray);
   };
 
-  const updateDocument = (document, documentData) => {
+  const updateDocument = (documentId, documentData) => {
     const newArray = [...documents];
-    const documentIndex = newArray.findIndex((d) => d.id === document.id);
+    const documentIndex = newArray.findIndex((d) => d.id === documentId);
     newArray[documentIndex] = documentData;
     setDocuments(newArray);
   }
@@ -50,8 +55,9 @@ function Dashboard() {
       <DocumentForm
         closeModal={closeModal}
         boxes={boxes}
+        tags={tags}
         document={document}
-        updateDocument={(documentData) => updateDocument(documentData)}
+        updateDocument={(documentData) => updateDocument(document.id, documentData)}
         addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
     })
   }
@@ -67,7 +73,7 @@ function Dashboard() {
         </button>
       </div>
       <div className='mx-8'>
-        <DocumentFilters boxes={boxes} fetchDocuments={fetchDocuments} />
+        <DocumentFilters boxes={boxes} tags={tags} fetchDocuments={fetchDocuments} />
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4'>
           { documents.map((document) => 
           <Document 
