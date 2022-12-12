@@ -56,7 +56,7 @@ function DocumentForm({ addDocument, updateDocument, closeModal, document, boxes
     let data = new FormData();
     data.append('name', form.name);
     data.append('box_id', form.boxId);
-    form.tagIds.forEach(id => data.append('tag_ids[]', id));
+    form.tagIds?.forEach(id => data.append('tag_ids[]', id));
     data.append('deleted_images[]', images.filter(i => i.destroy).map(i => i.id));
     images.filter(i => i.id === null).forEach(i => data.append('images[]', i.file));
     return data;
