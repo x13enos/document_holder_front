@@ -26,7 +26,7 @@ function Document({ document, deleteCallback, openForm }) {
         { document.tags.length > 0 && (
           <div className="flex">
             {document.tags.map((tag) => (
-              <div key={tag.id} className="mr-2 items-center badge badge-lg">
+              <div key={tag.id} className="mr-2 items-center badge">
                 {tag.name}
               </div>
             ))}

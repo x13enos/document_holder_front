@@ -6,7 +6,9 @@ function SidebarLink ({ title, icon, link }) {
   return (
     <>
       <li>
-        <Link to={link} className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+        <Link 
+          to={link}
+          className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
           <span className="inline-flex items-center h-12 w-8 text-lg text-gray-400">{icon}</span>
           <span className="text-sm font-medium">{title}</span>
         </Link>

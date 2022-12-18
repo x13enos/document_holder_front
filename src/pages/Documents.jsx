@@ -4,13 +4,13 @@ import Document from '../components/Document';
 import DocumentForm from  '../components/DocumentForm';
 import DocumentFilters from '../components/DocumentFilters';
 import { AiOutlineFileAdd } from 'react-icons/ai';
-import { useOutletContext } from 'react-router-dom';
 
 function Dashboard() {
   const [documents, setDocuments] = useState([]);
   const [boxes, setBoxes] = useState([]);
   const [tags, setTags] = useState([]);
-  const { setModalData } = useOutletContext();
+  const [documentFormShowing, setDocumentFormShowing] = useState(false);
+  const [updatedDocument, setUpdatedDocument] = useState(null);
 
   const fetchDocuments = async (params = {}) => {
     const response = await httpClient.get('/documents', { params });
@@ -46,43 +46,55 @@ function Dashboard() {
     setDocuments(newArray);
   }
 
-  const closeModal = () => {
-    setModalData({ show: false, content: <></> });
+  const showDocuments = () => {
+    setUpdatedDocument(null)
+    setDocumentFormShowing(false);
   }
 
-  const openForm = (document = null) => {
-    setModalData({ show: true, content:
-      <DocumentForm
-        closeModal={closeModal}
-        boxes={boxes}
-        tags={tags}
-        document={document}
-        updateDocument={(documentData) => updateDocument(document.id, documentData)}
-        addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
-    })
+  const openUpdatingForm = (document) => {
+    setUpdatedDocument(document)
+    setDocumentFormShowing(true);
   }
 
   return (
     <div>
       <div className='flex items-center pl-8 h-20 lg:shadow-md'>
-        <span className='text-2xl mr-4'>Documents</span>
-        <button 
-          className="btn btn-success btn-circle btn-outline"
-          onClick={() => openForm(null)}>
-          <AiOutlineFileAdd size="1.7em" />
-        </button>
+        { documentFormShowing ? (
+          <span className='text-2xl mr-4'>{updatedDocument ? "Update document" : "New Document"}</span>
+        ) : (
+          <>
+            <span className='text-2xl mr-4'>Documents</span>
+            <button 
+              className="btn btn-success btn-circle btn-outline"
+              onClick={() => setDocumentFormShowing(true)}>
+              <AiOutlineFileAdd size="1.7em" />
+            </button>
+          </>
+        ) }
       </div>
-      <div className='mx-8'>
-        <DocumentFilters boxes={boxes} tags={tags} fetchDocuments={fetchDocuments} />
-        <div className='grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4'>
-          { documents.map((document) => 
-          <Document 
-            document={document} 
-            key={document.id} 
-            deleteCallback={() => deleteDocument(document.id)}
-            openForm={() => openForm(document)}/>
-        )}
+      <div className='mx-8 mb-12'>
+        { documentFormShowing ? (
+           <DocumentForm
+           showDocuments={showDocuments}
+           boxes={boxes}
+           tags={tags}
+           document={updatedDocument}
+           updateDocument={(documentData) => updateDocument(document.id, documentData)}
+           addDocument={(documentData) => setDocuments([documentData, ...documents]) } />
+        ) : (
+          <>
+            <DocumentFilters boxes={boxes} tags={tags} fetchDocuments={fetchDocuments} />
+            <div className='grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4'>
+              { documents.map((document) => 
+              <Document 
+                document={document} 
+                key={document.id} 
+                deleteCallback={() => deleteDocument(document.id)}
+                openForm={() => openUpdatingForm(document)}/>
+            )}
         </div>
+          </>
+        ) }
       </div>
     </div>
   )
